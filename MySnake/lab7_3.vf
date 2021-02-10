@@ -1,0 +1,117 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
+////////////////////////////////////////////////////////////////////////////////
+//   ____  ____ 
+//  /   /\/   / 
+// /___/  \  /    Vendor: Xilinx 
+// \   \   \/     Version : 14.7
+//  \   \         Application : sch2hdl
+//  /   /         Filename : lab7_3.vf
+// /___/   /\     Timestamp : 11/06/2019 15:07:36
+// \   \  /  \ 
+//  \___\/\___\ 
+//
+//Command: sch2hdl -intstyle ise -family kintex7 -verilog D:/lab7/display_sync/lab7_3.vf -w D:/lab7/display_sync/lab7_3.sch
+//Design Name: lab7_3
+//Device: kintex7
+//Purpose:
+//    This verilog netlist is translated from an ECS schematic.It can be 
+//    synthesized and simulated, but it should not be modified. 
+//
+`timescale  100 ps / 10 ps
+
+module D2_4E_HXILINX_lab7_3 (D0, D1, D2, D3, A0, A1, E);
+    
+
+   output D0;
+   output D1;
+   output D2;
+   output D3;
+
+   input  A0;
+   input  A1;
+   input  E;
+  
+   reg D0;
+   reg D1;
+   reg D2;
+   reg D3;
+
+      always @ (A0 or A1 or E)
+      begin
+         if(!E)
+           {D3, D2, D1, D0} <= 4'b0000;
+        else
+        begin
+           case({A1,A0})
+             2'b00 : {D3,D2,D1,D0} <= 4'b0001;
+             2'b01 : {D3,D2,D1,D0} <= 4'b0010;
+             2'b10 : {D3,D2,D1,D0} <= 4'b0100;
+             2'b11 : {D3,D2,D1,D0} <= 4'b1000;
+          endcase
+        end
+     end 
+
+endmodule
+`timescale 1ns / 1ps
+
+module lab7_3(Hexs, 
+              LES, 
+              point, 
+              Scan, 
+              AN, 
+              HEX, 
+              LE, 
+              p);
+
+    input [15:0] Hexs;
+    input [3:0] LES;
+    input [3:0] point;
+    input [1:0] Scan;
+   output [3:0] AN;
+   output [3:0] HEX;
+   output LE;
+   output p;
+   
+   wire XLXN_32;
+   wire XLXN_33;
+   wire XLXN_34;
+   wire XLXN_35;
+   wire XLXN_36;
+   
+   LAB7_4to1mux  XLXI_2 (.I0(point[0]), 
+                        .I1(point[1]), 
+                        .I2(point[2]), 
+                        .I3(point[3]), 
+                        .s(Scan[1:0]), 
+                        .o(p));
+   lab7_circuit  XLXI_3 (.I0(Hexs[3:0]), 
+                        .I1(Hexs[11:8]), 
+                        .I2(Hexs[7:4]), 
+                        .I3(Hexs[15:12]), 
+                        .s(Scan[1:0]), 
+                        .o(HEX[3:0]));
+   LAB7_4to1mux  XLXI_4 (.I0(LES[0]), 
+                        .I1(LES[1]), 
+                        .I2(LES[2]), 
+                        .I3(LES[3]), 
+                        .s(Scan[1:0]), 
+                        .o(LE));
+   (* HU_SET = "XLXI_8_0" *) 
+   D2_4E_HXILINX_lab7_3  XLXI_8 (.A0(Scan[0]), 
+                                .A1(Scan[1]), 
+                                .E(XLXN_32), 
+                                .D0(XLXN_33), 
+                                .D1(XLXN_34), 
+                                .D2(XLXN_35), 
+                                .D3(XLXN_36));
+   VCC  XLXI_9 (.P(XLXN_32));
+   INV  XLXI_10 (.I(XLXN_33), 
+                .O(AN[0]));
+   INV  XLXI_11 (.I(XLXN_34), 
+                .O(AN[1]));
+   INV  XLXI_12 (.I(XLXN_35), 
+                .O(AN[2]));
+   INV  XLXI_13 (.I(XLXN_36), 
+                .O(AN[3]));
+endmodule
